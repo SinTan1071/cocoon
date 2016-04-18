@@ -6,6 +6,8 @@ var colors = require('colors');
 var argv = require('yargs').argv;
 var exec = require('child_process').exec;
 
+var viewBasePath = './src/views';
+var scssBasePath = './src/scss';
 var scriptsBasePath = './src/scripts';
 var modelBasePath = scriptsBasePath + '/models';
 var serviceBasePath = scriptsBasePath + '/services';
@@ -124,6 +126,7 @@ function createController(params) {
 
 function createAction(params) {
     for (var i in params) {
+
         var content = swig.renderFile(__dirname + '/files/action.tpl', {
             name: getPathFileName(params[i])
         });
@@ -138,6 +141,10 @@ function createAction(params) {
             console.log(colors.yellow(file));
             createActionState(params[i]);
         });
+
+        createTemplate('pages', params[i]);
+
+        createActionScss('pages', params[i]);
     }
 }
 
@@ -169,9 +176,36 @@ function createActionState(path) {
     });
 }
 
-function createActionCss(path) {
+function createTemplate(folder, path) {
+
+    var content = swig.renderFile(__dirname + '/files/view.tpl', {
+        name: getPathFileName(path),
+        folder: folder
+    });
+
+    var file = viewBasePath + '/' + folder + '/' + path + '.html';
+
+    fs.outputFile(file, content, function (e) {
+        report(e);
+    });
 
 }
+
+function createActionScss(folder, path) {
+
+    var content = swig.renderFile(__dirname + '/files/scss.tpl', {
+        name: getPathFileName(path),
+        folder: folder
+    });
+
+    var file = scssBasePath + '/' + folder + '/' + path + '.scss';
+
+    fs.outputFile(file, content, function (e) {
+        report(e);
+    });
+
+}
+
 
 function createModel(params) {
     for (var i in params) {
@@ -208,6 +242,24 @@ function createService(params) {
     }
 }
 
+function createDirective(params) {
+    for (var i in params) {
+
+        var content = swig.renderFile(__dirname + '/files/directive.tpl', {
+            name: getPathFileName(params[i])
+        });
+
+        var file = directiveBasePath + '/' + params[i] + '.js';
+
+        fs.outputFile(file, content, function (e) {
+            report(e);
+
+            console.log(colors.green('Add directive success.'));
+            console.log(colors.yellow(file));
+        });
+    }
+}
+
 
 if (argv.new) {
 
@@ -233,6 +285,9 @@ if (argv.new) {
                 break;
             case 'service':
                 createService(params);
+                break;
+            case 'directive':
+                createDirective(params);
                 break;
             default:
                 break;
