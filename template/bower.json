@@ -1,0 +1,24 @@
+{
+  "name": "cocoon",
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.8",
+    "angular-ui-router": "~0.2.15",
+    "angularAMD": "^0.2.1",
+    "requirejs": "~2.1.22",
+    "require-css": "~0.1.8",
+    "jquery": "^2.2.2",
+    "zepto": "^1.1.6",
+    "PACE": "pace#^1.0.2"
+  }
+}

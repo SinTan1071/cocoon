@@ -1,0 +1,16 @@
+@import "compass";
+
+// 屏幕适配设置
+$html_font_size: 100px;
+$html_max_width: 768px;
+
+
+// 相对单位rem转换
+@function pxTorem($px) {
+  @return $px / $html_font_size * 1rem;
+}
+
+
+
+
+

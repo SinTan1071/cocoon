@@ -1,0 +1,15 @@
+{
+  "name": "cocoon",
+  "version": "0.0.1",
+  "description": "",
+  "devDependencies": {
+    "browser-sync": "^2.10.0",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-compass": "^2.1.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-watch": "^4.3.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

@@ -1,0 +1,27 @@
+@import "globals";
+
+html {
+  height: 100%;
+  font-family: Helvetica, '宋体', Microsoft YaHei, Tahoma, Arial, sans-serif;
+  font-size: $html_font_size;
+  max-width: $html_max_width;
+  margin: 0 auto;
+}
+
+body {
+  height: 100%;
+  font-size: pxTorem(12px);
+}
+
+a {
+  text-decoration: none;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+

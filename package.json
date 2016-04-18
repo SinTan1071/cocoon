@@ -1,0 +1,28 @@
+{
+  "name": "cocoon-framework",
+  "version": "1.0.1",
+  "description": "前端脚手架",
+  "main": "cocoon.js",
+  "bin": {
+    "cocoon": "cocoon.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fourever/cocoon.git"
+  },
+  "author": "koyue",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fourever/cocoon/issues"
+  },
+  "homepage": "https://github.com/fourever/cocoon#readme",
+  "dependencies": {
+    "fs-extra": "^0.27.0",
+    "shelljs": "^0.6.0",
+    "swig": "^1.4.2",
+    "yargs": "^4.6.0"
+  }
+}
