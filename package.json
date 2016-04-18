@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/fourever/cocoon#readme",
   "dependencies": {
+    "colors": "^1.1.2",
     "fs-extra": "^0.27.0",
     "shelljs": "^0.6.0",
     "swig": "^1.4.2",

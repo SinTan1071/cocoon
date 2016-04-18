@@ -1,0 +1,13 @@
+{
+  "routes": {
+    "404": {
+      "url": "/404",
+      "templateUrl": "views/404.html"
+    },
+    "home": {
+      "url": "/home",
+      "templateUrl": "views/home.html",
+      "controllerUrl": "controllers/home"
+    }
+  }
+}

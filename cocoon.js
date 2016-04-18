@@ -2,6 +2,7 @@
 
 var swig = require('swig');
 var fs = require('fs-extra');
+var colors = require('colors');
 var argv = require('yargs').argv;
 var exec = require('child_process').exec;
 
@@ -14,7 +15,8 @@ var controllerBasePath = scriptsBasePath + '/controllers';
 
 function report(e) {
     if (e) {
-        throw e;
+        console.log(colors.red(e));
+        process.exit();
     }
 }
 
@@ -23,6 +25,48 @@ function getPathFileName(path) {
     return result[result.length - 1];
 }
 
+
+function generateActionState(path) {
+
+    var state = {};
+
+    var result = path.split('/');
+
+
+    if (result.length == 1) {
+
+        state.name = result[0];
+        state.url = '/' + result[0];
+        state.templateUrl = 'views/' + result[0] + '.html';
+        state.controllerUrl = 'controllers/' + result[0];
+
+        return state;
+    }
+
+    var controller = result[0];
+
+    result.shift();
+
+    if (result.length == 1) {
+        state.name = controller + '@' + result[0];
+        state.url = '/' + controller + '/' + result[0];
+        state.templateUrl = 'views/' + controller + '/' + result[0] + '.html';
+        state.controllerUrl = 'controlles/' + controller + '/' + result[0];
+
+        return state;
+    }
+
+
+    var actionUri = result.join('/');
+
+    state.name = controller + '@' + actionUri;
+    state.url = '/' + controller + '/' + actionUri;
+    state.templateUrl = 'views/' + controller + '/' + actionUri + '.html';
+    state.controllerUrl = 'controlles/' + controller + '/' + actionUri;
+
+    return state;
+
+}
 
 function copyCocoonTemplate(name) {
     fs.copy(__dirname + '/template', './', function (e) {
@@ -64,23 +108,69 @@ function setNpmProjectName(name) {
 
 function createController(params) {
     for (var i in params) {
-        fs.mkdirsSync(controllerBasePath + '/' + params[i], function (e) {
+
+        var path = controllerBasePath + '/' + params[i];
+
+        fs.mkdirs(path, function (e) {
+
             report(e);
+
+            console.log(colors.green('Add controller success.'));
+            console.log(colors.yellow(path));
+
         });
     }
 }
 
 function createAction(params) {
     for (var i in params) {
-
         var content = swig.renderFile(__dirname + '/files/action.tpl', {
             name: getPathFileName(params[i])
         });
 
-        fs.outputFile(controllerBasePath + '/' + params[i] + '.js', content, function (e) {
+        var file = controllerBasePath + '/' + params[i] + '.js';
+
+        fs.outputFile(file, content, function (e) {
+
             report(e);
+
+            console.log(colors.green('Add aciton success.'));
+            console.log(colors.yellow(file));
+            createActionState(params[i]);
         });
     }
+}
+
+function createActionState(path) {
+    fs.readJson('./src/config.json', function (e, config) {
+
+        report(e);
+
+        var result = generateActionState(path);
+
+        var name = result.name;
+
+        delete result.name;
+
+        config.routes[name] = result;
+
+        fs.outputJson('./src/config.json', config, function (e) {
+
+            report(e);
+
+            var response = {};
+
+            response[name] = result;
+
+            console.log(colors.green('Generate angular route state :'));
+            console.log(colors.yellow(JSON.stringify(response, null, 2)));
+
+        });
+    });
+}
+
+function createActionCss(path) {
+
 }
 
 function createModel(params) {
@@ -90,8 +180,12 @@ function createModel(params) {
             name: getPathFileName(params[i])
         });
 
-        fs.outputFile(modelBasePath + '/' + params[i] + '.js', content, function (e) {
+        var file = modelBasePath + '/' + params[i] + '.js';
+
+        fs.outputFile(file, content, function (e) {
             report(e);
+            console.log(colors.green('Add model success.'));
+            console.log(colors.yellow(file));
         });
     }
 }
@@ -103,39 +197,50 @@ function createService(params) {
             name: getPathFileName(params[i])
         });
 
-        fs.outputFile(serviceBasePath + '/' + params[i] + '.js', content, function (e) {
+        var file = serviceBasePath + '/' + params[i] + '.js';
+
+        fs.outputFile(file, content, function (e) {
             report(e);
+
+            console.log(colors.green('Add service success.'));
+            console.log(colors.yellow(file));
         });
     }
 }
 
-if (argv.init) {
 
-    copyCocoonTemplate(argv.init);
+if (argv.new) {
 
-}else if (argv.create) {
+    var name = argv.new === true ? 'cocoon' : argv.new;
+
+    copyCocoonTemplate(name);
+
+} else if (argv.create) {
 
     var action = argv.create;
     var params = argv._;
-    switch (action) {
-        case 'controller':
-            createController(params);
-            break;
-        case 'action':
-            createAction(params);
-            break;
-        case 'model':
-            createModel(params);
-            break;
-        case 'service':
-            createService(params);
-            break;
-        default:
-            break;
+
+    if (action !== true) {
+        switch (action) {
+            case 'controller':
+                createController(params);
+                break;
+            case 'action':
+                createAction(params);
+                break;
+            case 'model':
+                createModel(params);
+                break;
+            case 'service':
+                createService(params);
+                break;
+            default:
+                break;
+        }
     }
 
-}else{
-    
+} else {
+
 }
 
 

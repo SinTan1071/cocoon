@@ -5,12 +5,16 @@ require.config({
 
     // 模块路径定义　　　　
     paths: {
+
         // 依赖库
-        'zepto': './bower/zepto/zepto.min',
-        'jquery': './bower/jquery/dist/jquery.min',
-        'angular': './bower/angular/angular',
-        'angularAMD': './bower/angularAMD/angularAMD.min',
-        'angularRoute': './bower/angular-ui-router/release/angular-ui-router.min',
+        'zepto': 'vendor/zepto/zepto.min',
+        'jquery': 'vendor/jquery/dist/jquery.min',
+        'angular': 'vendor/angular/angular',
+        'angularAMD': 'vendor/angularAMD/angularAMD.min',
+        'angularRoute': 'vendor/angular-ui-router/release/angular-ui-router.min',
+        'text' : 'vendor/requirejs-plugins/lib/text',
+        'json': 'vendor/requirejs-plugins/src/json',
+
         // 启动模块
         'app': './app',
         'url': './services/url',
@@ -18,14 +22,14 @@ require.config({
         'bridge': './services/bridge',
         'typing': './services/typing',
         'storage': './services/storage',
-        'message': './services/message',
+        'message': './services/message'
 
     },
 
     // 预加载模块
     map: {
         '*': {
-            'css': 'bower/require-css/css.min'
+            'css': 'vendor/require-css/css.min'
         }
     },
 
@@ -38,7 +42,7 @@ require.config({
             exports: 'angular'
         },
         'angularAMD': {
-            deps: ['angular']
+            deps: ['angularRoute']
         },
         'angularRoute': {
             deps: ['angular']
@@ -47,10 +51,13 @@ require.config({
 
     // 路由时间戳：防止缓存,开发时使用
     urlArgs: 'timestamp=' + (new Date()).getTime(),
-    
-    waitSeconds: 15,
+
+    // 请求超时
+    waitSeconds: 15
 
 });
 
 // 启动程序
-define(['app', 'typing', 'ajax']);
+define(['app'],function (app) {
+    app.run();
+});

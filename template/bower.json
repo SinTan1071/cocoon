@@ -17,6 +17,7 @@
     "angularAMD": "^0.2.1",
     "requirejs": "~2.1.22",
     "require-css": "~0.1.8",
+    "requirejs-plugins": "^1.0.3",
     "jquery": "^2.2.2",
     "zepto": "^1.1.6",
     "PACE": "pace#^1.0.2"

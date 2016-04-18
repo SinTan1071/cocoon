@@ -1,4 +1,4 @@
-define(['angularAMD', 'angularRoute', './layout'], function (angularAMD) {
+define(['angularAMD', 'json!../config.json'], function (angularAMD, config) {
 
     var app = angular.module("APP", ['ui.router']);
 
@@ -10,18 +10,13 @@ define(['angularAMD', 'angularRoute', './layout'], function (angularAMD) {
         // 默认进入先重定向
         $urlRouterProvider.otherwise('404');
 
+        var routes = config.routes || [];
+
         // 路由定义
-        // 主页
-        $stateProvider
-            .state('home', angularAMD.route({
-                url: '/home',
-                templateUrl: 'views/home.html',
-                controllerUrl: 'controllers/home'
-            }))
-            .state('404', angularAMD.route({
-                url: '/404',
-                templateUrl: 'views/404.html'
-            }));
+        for (var i in routes) {
+            $stateProvider.state(i, angularAMD.route(routes[i]));
+        }
+
     }]);
 
     return angularAMD.bootstrap(app);

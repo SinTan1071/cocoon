@@ -1,10 +1,14 @@
-define(['app','css!../../css/home.css'],function(app){
+/**
+ * home action
+ */
 
-    app.controller('home', ['$scope', '$state',function($scope, $state) {
+define(['css!../../css/home.css'],function(){
 
-      $scope.hola = "鲨鱼大咖";
+    return ['$scope',function($scope) {
 
-    }]);
+      $scope.title = "Cocoon";
+
+    }];
 
 
 });

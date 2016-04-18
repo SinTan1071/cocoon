@@ -3,7 +3,6 @@ var browserSync = require('browser-sync').create();
 var watch = require('gulp-watch');
 var compass = require('gulp-compass');
 var plumber = require('gulp-plumber');
-var requirejsOptimize = require('gulp-requirejs-optimize');
 
 
 // compass
@@ -28,7 +27,7 @@ gulp.task('browser', function () {
 
     watch('./src/sass/**/*.scss', gulp.series('compass'));
 
-    watch(['./src/scripts/[^bower]*/**/*.js', './src/scripts/*.js', './src/index.html', './src/views/**/*.html', './src/images/**/*.*'], browserSync.reload);
+    watch(['./src/config.json', './src/scripts/[^bower]*/**/*.js', './src/scripts/*.js', './src/index.html', './src/views/**/*.html', './src/images/**/*.*'], browserSync.reload);
 
     return browserSync.init({
         server: {
@@ -36,8 +35,12 @@ gulp.task('browser', function () {
         },
         port: 8080,
         startPath: '/src#home'
-        // proxy: "qsq.com/shark/src#home"
     });
+
+    // return browserSync.init({
+    //     proxy: "example.com"
+    // });
+
 });
 
 // 开启服务
@@ -46,8 +49,3 @@ gulp.task('default', gulp.series('browser'), function (callback) {
 });
 
 
-gulp.task('build', function () {
-    return gulp.src('src/scripts/main.js')
-        .pipe(requirejsOptimize())
-        .pipe(gulp.dest('dist'));
-});

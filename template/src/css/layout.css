@@ -1,17 +1,15 @@
-
-@import "globals";
-
+@charset "UTF-8";
 html {
   height: 100%;
   font-family: Helvetica, '宋体', Microsoft YaHei, Tahoma, Arial, sans-serif;
-  font-size: $html_font_size;
-  max-width: $html_max_width;
+  font-size: 100px;
+  max-width: 768px;
   margin: 0 auto;
 }
 
 body {
   height: 100%;
-  font-size: pxTorem(12px);
+  font-size: 0.12rem;
 }
 
 a {
@@ -25,4 +23,3 @@ a {
 .pull-right {
   float: right;
 }
-
