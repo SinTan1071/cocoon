@@ -108,23 +108,8 @@ function setNpmProjectName(name) {
 
 }
 
+
 function createController(params) {
-    for (var i in params) {
-
-        var path = controllerBasePath + '/' + params[i];
-
-        fs.mkdirs(path, function (e) {
-
-            report(e);
-
-            console.log(colors.green('Add controller success.'));
-            console.log(colors.yellow(path));
-
-        });
-    }
-}
-
-function createAction(params) {
     for (var i in params) {
 
         var content = swig.renderFile(__dirname + '/files/action.tpl', {
@@ -137,7 +122,7 @@ function createAction(params) {
 
             report(e);
 
-            console.log(colors.green('Add aciton success.'));
+            console.log(colors.green('Add controller success.'));
             console.log(colors.yellow(file));
             createActionState(params[i]);
         });
@@ -260,6 +245,63 @@ function createDirective(params) {
     }
 }
 
+function renameController(o, n) {
+    o = controllerBasePath + '/' + o + '.js';
+    n = controllerBasePath + '/' + n + '.js';
+    fs.move(o, n, function (e) {
+        report(e);
+        console.log(colors.green('rename controller success.'));
+        console.log(colors.yellow(o + ' -> ' + n));
+    });
+}
+
+
+function renameModel(o, n) {
+    o = modelBasePath + '/' + o + '.js';
+    n = modelBasePath + '/' + n + '.js';
+    fs.move(o, n, function (e) {
+        report(e);
+        console.log(colors.green('rename model success.'));
+        console.log(colors.yellow(o + ' -> ' + n));
+    });
+}
+
+function renameService(o, n) {
+    o = serviceBasePath + '/' + o + '.js';
+    n = serviceBasePath + '/' + n + '.js';
+    fs.move(o, n, function (e) {
+        report(e);
+        console.log(colors.green('rename service success.'));
+        console.log(colors.yellow(o + ' -> ' + n));
+    });
+}
+
+function renameDirective(o, n) {
+    o = directiveBasePath + '/' + o + '.js';
+    n = directiveBasePath + '/' + n + '.js';
+    fs.move(o, n, function (e) {
+        report(e);
+        console.log(colors.green('rename directive success.'));
+        console.log(colors.yellow(o + ' -> ' + n));
+    });
+}
+
+function removeController(path) {
+
+}
+
+
+function removeModel(path) {
+
+}
+
+function removeService(path) {
+
+}
+
+function removeDirective(path) {
+
+}
 
 if (argv.new) {
 
@@ -269,33 +311,71 @@ if (argv.new) {
 
 } else if (argv.create) {
 
-    var action = argv.create;
-    var params = argv._;
+    if (argv.create !== true) {
 
-    if (action !== true) {
-        switch (action) {
+        switch (argv.create) {
             case 'controller':
-                createController(params);
-                break;
-            case 'action':
-                createAction(params);
+                createController(argv._);
                 break;
             case 'model':
-                createModel(params);
+                createModel(argv._);
                 break;
             case 'service':
-                createService(params);
+                createService(argv._);
                 break;
             case 'directive':
-                createDirective(params);
+                createDirective(argv._);
                 break;
             default:
                 break;
         }
     }
 
-} else {
+} else if (argv.rename) {
+
+    if (argv.rename !== true) {
+
+        switch (argv.rename) {
+            case 'controller':
+                renameController(argv._[0], argv._[1]);
+                break;
+            case 'model':
+                renameModel(argv._[0], argv._[1]);
+                break;
+            case 'service':
+                renameService(argv._[0], argv._[1]);
+                break;
+            case 'directive':
+                renameDirective(argv._[0], argv._[1]);
+                break;
+            default:
+                break;
+        }
+    }
+
+} else if (argv.remove) {
+
+    if (argv.remove !== true) {
+
+        switch (argv.remove) {
+            case 'controller':
+                removeController(argv._);
+                break;
+            case 'model':
+                removeModel(argv._);
+                break;
+            case 'service':
+                removeService(argv._);
+                break;
+            case 'directive':
+                removeDirective(argv._);
+                break;
+            default:
+                break;
+        }
+    }
 
 }
+
 
 
