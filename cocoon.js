@@ -286,10 +286,23 @@ function renameDirective(o, n) {
     });
 }
 
-function removeController(path) {
+
+function removeTemplate() {
 
 }
 
+function removeScss() {
+
+}
+
+function removeCss() {
+
+}
+
+
+function removeController(path) {
+
+}
 
 function removeModel(path) {
 
