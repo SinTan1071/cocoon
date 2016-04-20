@@ -3,3 +3,5 @@ node_modules
 .idea
 template/.sass-cache
 .idea/workspace.xml
+
+npm-debug.log
