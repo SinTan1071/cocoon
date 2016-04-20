@@ -6,6 +6,7 @@ var colors = require('colors');
 var argv = require('yargs').argv;
 var exec = require('child_process').exec;
 
+var cssBasePath = './src/css';
 var viewBasePath = './src/views';
 var scssBasePath = './src/sass';
 var scriptsBasePath = './src/scripts';
@@ -32,41 +33,15 @@ function generateActionState(path) {
 
     var state = {};
 
-    var result = path.split('/');
+    var name = path.replace(/\//, '-');
 
-
-    if (result.length == 1) {
-
-        state.name = result[0];
-        state.url = '/' + result[0];
-        state.templateUrl = 'views/' + result[0] + '.html';
-        state.controllerUrl = 'controllers/' + result[0];
-
-        return state;
-    }
-
-    var controller = result[0];
-
-    result.shift();
-
-    if (result.length == 1) {
-        state.name = controller + '@' + result[0];
-        state.url = '/' + controller + '/' + result[0];
-        state.templateUrl = 'views/' + controller + '/' + result[0] + '.html';
-        state.controllerUrl = 'controlles/' + controller + '/' + result[0];
-
-        return state;
-    }
-
-
-    var actionUri = result.join('/');
-
-    state.name = controller + '@' + actionUri;
-    state.url = '/' + controller + '/' + actionUri;
-    state.templateUrl = 'views/' + controller + '/' + actionUri + '.html';
-    state.controllerUrl = 'controlles/' + controller + '/' + actionUri;
+    state.name = name;
+    state.url = '/' + path;
+    state.templateUrl = 'views/' + path + '.html';
+    state.controllerUrl = 'controllers/' + path;
 
     return state;
+
 
 }
 
@@ -119,7 +94,7 @@ function getCssPath(path) {
     for (var i = 0; i < paths.length; i++) {
         _path += '../';
     }
-    return _path + path;
+    return _path + 'css/' + path;
 }
 
 
@@ -138,6 +113,8 @@ function createController(params) {
             report(e);
 
             createTemplate(params[i]);
+
+            createControllerCss(params[i]);
 
             createControllerScss(params[i]);
 
@@ -194,18 +171,20 @@ function createTemplate(path) {
 
 }
 
+
 function getGlobalsPath(path) {
 
     var paths = path.split('/');
     var _path = '';
 
-    for (var i = 0; i < paths.length -1; i++) {
+    for (var i = 0; i < paths.length - 1; i++) {
         _path += '../';
     }
     return _path + 'globals';
 }
 
-function createControllerScss( path) {
+
+function createControllerScss(path) {
 
     var content = swig.renderFile(__dirname + '/files/scss.tpl', {
         name: path.replace(/\//, '-'),
@@ -213,6 +192,22 @@ function createControllerScss( path) {
     });
 
     var file = scssBasePath + '/' + path + '.scss';
+
+    fs.outputFile(file, content, function (e) {
+        report(e);
+        console.log(e);
+    });
+
+}
+
+function createControllerCss(path) {
+
+    var content = swig.renderFile(__dirname + '/files/css.tpl', {
+        name: path.replace(/\//, '-'),
+        globals_path: getGlobalsPath(path)
+    });
+
+    var file = cssBasePath + '/' + path + '.css';
 
     fs.outputFile(file, content, function (e) {
         report(e);

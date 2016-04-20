@@ -3,8 +3,7 @@
  */
 define(
     [
-        'app',
-        'css!{{ css_path }}'
+        'app'
     ],
     function (app) {
 
