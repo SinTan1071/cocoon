@@ -1,8 +1,8 @@
 /**
  * {{ name }} directive
- *
  */
-define([
+define(
+    [
         'app',
         'css!{{ css_path }}'
     ],
@@ -13,7 +13,7 @@ define([
                 restrict: 'A',
                 replace: true,
                 scope: {},
-                templateUrl: 'views/directives/faq.html',
+                //templateUrl: '',
                 link: function ($scope, $elem, $attrs) {
 
                 }

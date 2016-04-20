@@ -47,5 +47,3 @@ gulp.task('browser', function () {
 gulp.task('default', gulp.series('browser'), function (callback) {
     callback();
 });
-
-

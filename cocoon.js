@@ -7,7 +7,7 @@ var argv = require('yargs').argv;
 var exec = require('child_process').exec;
 
 var viewBasePath = './src/views';
-var scssBasePath = './src/scss';
+var scssBasePath = './src/sass';
 var scriptsBasePath = './src/scripts';
 var modelBasePath = scriptsBasePath + '/models';
 var serviceBasePath = scriptsBasePath + '/services';
@@ -71,22 +71,27 @@ function generateActionState(path) {
 }
 
 function copyCocoonTemplate(name) {
-    fs.copy(__dirname + '/template', './', function (e) {
+
+    fs.mkdirs('./' + name, function (e) {
         report(e);
-        setNpmProjectName(name);
-        setBowerProjectName(name);
-    });
+        fs.copy(__dirname + '/template', './' + name, function (e) {
+            report(e);
+            setNpmProjectName(name);
+            setBowerProjectName(name);
+        });
+    })
+
 }
 
 
 function setBowerProjectName(name) {
 
-    fs.readJson('./bower.json', function (e, data) {
+    fs.readJson('./' + name + '/bower.json', function (e, data) {
         report(e);
 
         data.name = name;
 
-        fs.outputJson('./bower.json', data, function (e) {
+        fs.outputJson('./' + name + '/bower.json', data, function (e) {
             report(e);
         });
     });
@@ -95,25 +100,35 @@ function setBowerProjectName(name) {
 
 function setNpmProjectName(name) {
 
-    fs.readJson('./package.json', function (e, data) {
+    fs.readJson('./' + name + '/package.json', function (e, data) {
 
         report(e);
 
         data.name = name;
 
-        fs.outputJson('./package.json', data, function (e) {
+        fs.outputJson('./' + name + '/package.json', data, function (e) {
             report(e);
         });
     });
 
 }
 
+function getCssPath(path) {
+    var paths = path.split('/');
+    var _path = '../';
+    for (var i = 0; i < paths.length; i++) {
+        _path += '../';
+    }
+    return _path + path;
+}
+
 
 function createController(params) {
     for (var i in params) {
 
-        var content = swig.renderFile(__dirname + '/files/action.tpl', {
-            name: getPathFileName(params[i])
+        var content = swig.renderFile(__dirname + '/files/controller.tpl', {
+            name: getPathFileName(params[i]),
+            css_path: getCssPath(params[i])
         });
 
         var file = controllerBasePath + '/' + params[i] + '.js';
@@ -122,18 +137,22 @@ function createController(params) {
 
             report(e);
 
+            createTemplate(params[i]);
+
+            createControllerScss(params[i]);
+
+            createControllerState(params[i]);
+
             console.log(colors.green('Add controller success.'));
+
             console.log(colors.yellow(file));
-            createActionState(params[i]);
         });
 
-        createTemplate('pages', params[i]);
 
-        createActionScss('pages', params[i]);
     }
 }
 
-function createActionState(path) {
+function createControllerState(path) {
     fs.readJson('./src/config.json', function (e, config) {
 
         report(e);
@@ -161,14 +180,13 @@ function createActionState(path) {
     });
 }
 
-function createTemplate(folder, path) {
+function createTemplate(path) {
 
     var content = swig.renderFile(__dirname + '/files/view.tpl', {
-        name: getPathFileName(path),
-        folder: folder
+        name: path.replace(/\//, '-')
     });
 
-    var file = viewBasePath + '/' + folder + '/' + path + '.html';
+    var file = viewBasePath + '/' + path + '.html';
 
     fs.outputFile(file, content, function (e) {
         report(e);
@@ -176,17 +194,29 @@ function createTemplate(folder, path) {
 
 }
 
-function createActionScss(folder, path) {
+function getGlobalsPath(path) {
+
+    var paths = path.split('/');
+    var _path = '';
+
+    for (var i = 0; i < paths.length -1; i++) {
+        _path += '../';
+    }
+    return _path + 'globals';
+}
+
+function createControllerScss( path) {
 
     var content = swig.renderFile(__dirname + '/files/scss.tpl', {
-        name: getPathFileName(path),
-        folder: folder
+        name: path.replace(/\//, '-'),
+        globals_path: getGlobalsPath(path)
     });
 
-    var file = scssBasePath + '/' + folder + '/' + path + '.scss';
+    var file = scssBasePath + '/' + path + '.scss';
 
     fs.outputFile(file, content, function (e) {
         report(e);
+        console.log(e);
     });
 
 }
