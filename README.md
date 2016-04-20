@@ -12,9 +12,6 @@ Cocoon是一个集成`angular.js`和`require.js`的前端开发框架,辅以`gul
 ```
 $ sudo npm install cocoon-framework -g
 $ cocoon --new project-name
-$ cd project-name
-* npm install 
-* gulp
 ```
 
 ### 命令行
